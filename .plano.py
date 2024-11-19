@@ -26,7 +26,7 @@ def run_():
     work_dir = get_absolute_path(make_dir("work"))
 
     make_kubeconfig_bundle(join(work_dir, ".kube"))
-    copy("test.sh", "work/test.sh")
+    copy("test.sh", join(work_dir, "test.sh"))
 
     run(f"podman run -it --rm --security-opt label=disable -v {work_dir}:/root {image_name}")
 
