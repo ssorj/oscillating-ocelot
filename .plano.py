@@ -4,6 +4,10 @@ image_name = "quay.io/ssorj/oscillating-ocelot"
 
 @command
 def build(no_cache=False):
+    """
+    Build the test image
+    """
+
     no_cache_arg = "--no-cache" if no_cache else ""
 
     run(f"podman manifest rm {image_name}", check=False, quiet=True)
@@ -13,7 +17,11 @@ def build(no_cache=False):
 
 @command
 def run_():
-    remove("work")
+    """
+    Run the test container
+    """
+
+    clean()
 
     work_dir = get_absolute_path(make_dir("work"))
 
