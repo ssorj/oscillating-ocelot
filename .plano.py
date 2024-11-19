@@ -32,20 +32,12 @@ def run_():
 
 def make_kubeconfig_bundle(target):
     source = read_yaml("~/.kube/config")
+    cluster = next((x for x in source["clusters"] if x["name"] == "minikube"), None)
+    user = next((x for x in source["users"] if x["name"] == "minikube"), None)
 
     assert source["current-context"] == "minikube"
-
-    for cluster in source["clusters"]:
-        if cluster["name"] == "minikube":
-            break
-    else:
-        assert False
-
-    for user in source["users"]:
-        if user["name"] == "minikube":
-            break
-    else:
-        assert False
+    assert cluster is not None
+    assert user is not None
 
     cluster_server = cluster["cluster"]["server"]
 
@@ -57,8 +49,6 @@ def make_kubeconfig_bundle(target):
     kubeconfig = kubeconfig_template.format(cluster_server=cluster_server).lstrip()
 
     write(join(target, "config"), kubeconfig)
-
-    return get_absolute_path(target)
 
 kubeconfig_template = """
 apiVersion: v1
