@@ -7,11 +7,10 @@ def build(no_cache=False):
     """
     Build the test image
     """
-
     no_cache_arg = "--no-cache" if no_cache else ""
 
     run(f"podman manifest rm {image_name}", check=False, quiet=True)
-    run(f"podman image rm {image_name}", check=False, quiet=True)
+    # run(f"podman image rm {image_name}", check=False, quiet=True)
     run(f"podman manifest create {image_name}")
     run(f"podman build {no_cache_arg} --format docker --platform linux/amd64,linux/arm64 --manifest {image_name} .")
 
@@ -20,7 +19,6 @@ def run_():
     """
     Run the test container
     """
-
     clean()
 
     work_dir = get_absolute_path(make_dir("work"))
@@ -39,14 +37,11 @@ def make_kubeconfig_bundle(target):
     assert cluster is not None
     assert user is not None
 
-    cluster_server = cluster["cluster"]["server"]
-
-    write(join(target, "cluster-server"), cluster_server)
     copy(cluster["cluster"]["certificate-authority"], join(target, "ca.crt"))
     copy(user["user"]["client-certificate"], join(target, "client.crt"))
     copy(user["user"]["client-key"], join(target, "client.key"))
 
-    kubeconfig = kubeconfig_template.format(cluster_server=cluster_server).lstrip()
+    kubeconfig = kubeconfig_template.format(cluster_server=cluster["cluster"]["server"]).lstrip()
 
     write(join(target, "config"), kubeconfig)
 
