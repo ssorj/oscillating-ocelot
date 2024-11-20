@@ -1,4 +1,4 @@
-# Osciallating ocelot
+# Oscillating ocelot
 
 ~~~
 minikube start
